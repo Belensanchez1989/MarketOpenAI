@@ -29,7 +29,7 @@ app.post("/api/chatbot", async (req, res) => {
     -Horario: Lunes a Sábado de 9:00 a 21:00
     -Productos: Frutas, verduras, carne, pescado, panadería, lácteos y productos enlatados.
     -Métodos de pago: Efectivo, tarjeta de crédito y débito y Bizum.
-    -Marcas: Ofrecemos productos de marcas reconocidas como Nestlé, Coca-Cola, Unilever,Pascual, Central Asturiana.
+    -Marcas: Ofrecemos productos de marcas reconocidas como Nestlé, Coca-Cola, Unilever,Pascual, Central Asturiana(Sólo y exclusivamente tenemos estos productos)
     Sólo puedes responder preguntas relacionadas con el supermercado. No puedes responder preguntas sobre otros temas,está prohibido.
     `;
 
