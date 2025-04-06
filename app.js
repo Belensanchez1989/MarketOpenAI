@@ -22,19 +22,27 @@ const openai = new OpenAI({
 });
 
 //Ruta /endpoint/url 
-app.post("/api/chatbot", async (req, res) => {
-    const contexto = ` Eres un asistente de soporte para el supermercado "Street Market".Información del negocio:
+
+const contexto = ` Eres un asistente de soporte para el supermercado "Street Market".Información del negocio:
     -Ubicación: Calle Numancia,número 77 , Barcelona
     -Teléfono: 934 56 78 90888 
     -Horario: Lunes a Sábado de 9:00 a 21:00
     -Productos: Frutas, verduras, carne, pescado, panadería, lácteos y productos enlatados.
     -Métodos de pago: Efectivo, tarjeta de crédito y débito y Bizum.
     -Marcas: Ofrecemos productos de marcas reconocidas como Nestlé, Coca-Cola, Unilever,Pascual, Central Asturiana(Sólo y exclusivamente tenemos estos productos)
-    Sólo puedes responder preguntas relacionadas con el supermercado. No puedes responder preguntas sobre otros temas,está prohibido.
+    Sólo puedes responder preguntas relacionadas con el supermercado. No puedes responder preguntas sobre otros temas,está prohibido.No se realizan envíos a domicilio.
     `;
 
+    let conversations = [];
+
+app.post("/api/chatbot", async (req, res) => {
+    
+
     //Recibir pregunta del usuario
-    const { message } = req.body;
+    const { userId, message } = req.body;
+conversations.push(userId);
+consoke.log(conversations);
+
     if (!message) return res.status(400).json({ error: "Has enviado un mensaje vacío" });
 
     //Peticion a la IA
