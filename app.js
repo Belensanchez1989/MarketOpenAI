@@ -40,10 +40,12 @@ app.post("/api/chatbot", async (req, res) => {
 
     //Recibir pregunta del usuario
     const { userId, message } = req.body;
+
 conversations.push(userId);
-consoke.log(conversations);
+console.log(conversations);
 
     if (!message) return res.status(400).json({ error: "Has enviado un mensaje vacío" });
+
 
     //Peticion a la IA
     try {
