@@ -1,6 +1,7 @@
 const sendButton = document.querySelector('#sendButton');
 const inputText = document.querySelector('#inputText');
 const messagesContainer = document.querySelector('.chat__messages');
+const userId = Date.now() + Math.floor(777 + Math.random() * 7000); // Generar un ID único para el usuario
 
 const sendMessage =  async () => {
     //Sacar el valor del input (pregunta)
@@ -22,7 +23,9 @@ try {
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ message: myMessage })
+        body: JSON.stringify({
+            userId,
+            message: myMessage })
     });
     const data = await response.json();
 
