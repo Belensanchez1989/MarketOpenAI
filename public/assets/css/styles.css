@@ -30,8 +30,9 @@ body{
 }
 
 .header__icon{
-    height: 4rem;
-    margin-top: 1.5rem;
+    height: 6rem;
+    width: 6rem;
+    
 }
 
 .chat{
@@ -99,8 +100,8 @@ body{
 }
 
 .chat__input:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 5px #007bff;
+    border-color: #e6633f;
+    box-shadow: 0 0 5px #e6633f;
 }
 
 .chat__inputs {
