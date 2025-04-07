@@ -45,10 +45,7 @@ app.post("/api/chatbot", async (req, res) => {
     if (!message) return res.status(400).json({ error: "Has enviado un mensaje vacío" });
 
     if (!conversations [userId])  {
-        conversations [userId] = [
-            { role: "system", content: contexto },
-            { role: "system", content: "Debes responder de la forma más corta y directa posible ,usando los mínimos tokens posibles" },
-        ];
+        conversations [userId] = [];
 
     }
     conversations[userId].push({ role: "user", content: message });
@@ -57,7 +54,10 @@ app.post("/api/chatbot", async (req, res) => {
     try {
         const response = await openai.chat.completions.create({
             model: "gpt-3.5-turbo",
-            messages: conversations[userId],
+            messages: [ 
+                { role: "system", content: contexto },
+                { role: "system", content: "Debes responder de la forma más corta y directa posible ,usando los mínimos tokens posibles" },
+                ...conversations[userId]],
             max_tokens: 200,
         });
 
