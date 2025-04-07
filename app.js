@@ -33,34 +33,48 @@ const contexto = ` Eres un asistente de soporte para el supermercado "Street Mar
     Sólo puedes responder preguntas relacionadas con el supermercado. No puedes responder preguntas sobre otros temas,está prohibido.No se realizan envíos a domicilio.
     `;
 
-    let conversations = [];
+let conversations = {};
 
 app.post("/api/chatbot", async (req, res) => {
-    
+
 
     //Recibir pregunta del usuario
     const { userId, message } = req.body;
 
-conversations.push(userId);
-console.log(conversations);
 
     if (!message) return res.status(400).json({ error: "Has enviado un mensaje vacío" });
 
+    if (!conversations [userId])  {
+        conversations [userId] = [
+            { role: "system", content: contexto },
+            { role: "system", content: "Debes responder de la forma más corta y directa posible ,usando los mínimos tokens posibles" },
+        ];
+
+    }
+    conversations[userId].push({ role: "user", content: message });
 
     //Peticion a la IA
     try {
         const response = await openai.chat.completions.create({
             model: "gpt-3.5-turbo",
-            messages: [
-                { role: "system", content: contexto },
-                { role: "system", content: "Debes responder de la forma más corta y directa posible ,usando los mínimos tokens posibles" },
-                { role: "user", content: message },
-            ],
+            messages: conversations[userId],
             max_tokens: 200,
         });
 
         //Devolver respuesta
+
         const reply = response.choices[0].message.content;
+
+        //Añadir al asistente la respuesta
+        conversations[userId].push({ role: "assistant", content: reply });
+
+        //Limitar número de mensajes
+        if (conversations[userId].length > 12) {
+            conversations[userId] = conversations[userId].slice(-10);
+        }
+
+        console.log(conversations);
+
         return res.status(200).json({ reply });
 
     } catch (error) {
