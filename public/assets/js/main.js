@@ -1,54 +1,50 @@
-let translateButton = document.getElementById("translateButton");
+const sendButton = document.querySelector('#sendButton');
+const inputText = document.querySelector('#inputText');
+const messagesContainer = document.querySelector('.chat__messages');
+const userId = Date.now() + Math.floor(777 + Math.random() * 7000); // Generar un ID único para el usuario
 
-translateButton.addEventListener("click", async () => {
-    let inputText = document.querySelector("#inputText");
-
-    //valor a traducir
-    const text = inputText.value.trim();
-
-    //lenguaje de destino 
-    const targetLang = document.querySelector("#targetLang").value;
-
-    if (!text) return false;
+const sendMessage =  async () => {
+    //Sacar el valor del input (pregunta)
+    
+    const myMessage = inputText.value.trim(); 
+    if(!myMessage) return false; 
 
 
-    //mensaje del usuario a la caja de mensaje 
+//incorporar el mensaje del usuario a la caja de mensajes
+messagesContainer.innerHTML += `<div class="chat__message chat__message--user">Yo: ${myMessage}</div>`;
 
-    const userMessage = document.createElement("div");
-    userMessage.className = "chat__message chat__message--user";
-    userMessage.textContent = text;
+    //vaciar el input del usuario(pregunta)
+    inputText.value = '';
 
-    const messagesContainer = document.querySelector(".chat__messages");
-    messagesContainer.appendChild(userMessage);
-    messagesContainer.scrollTop = messagesContainer.scrollHeight; //desplazar la barra de desplazamiento hacia abajo
+    //Peticionn al backend para que responda la IA
+try { 
+    const response =await fetch('/api/chatbot', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            userId,
+            message: myMessage })
+    });
+    const data = await response.json();
 
-    //Peticion ajax al backend 
-    try {
+    messagesContainer.innerHTML += `<div class="chat__message chat__message--bot">Montse: ${data.reply}</div>`;
 
-        const response = await fetch("/api/traducir", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ text, targetLang })
-        });
+ //Incorporar mensaje del bot al chat
+}catch (error) {
+    console.log("error:" , error);
+}
+   
 
-        const data = await response.json(); //esperar la respuesta del servidor 
-        //alertar el texto traducido
+    //Mover el scroll hacia abajo para ver el mensaje del bot
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+}
 
-        //agregar el mensaje de la ia al chat 
-const botMessage = document.createElement("div");
-        botMessage.className = "chat__message chat__message--bot";
-        botMessage.textContent = data.translatedText;
-        messagesContainer.appendChild(botMessage);
-        messagesContainer.scrollTop = messagesContainer.scrollHeight; //desplazar la barra de desplazamiento hacia abajo
-        
-
-
-    } catch (error) {
-        console.log("Error al traducir el texto", error);
+sendButton.addEventListener('click', sendMessage) ;
+inputText.addEventListener("keypress" , (event) => {
+    if(event.key === 'Enter'){
+        event.preventDefault(); 
+        sendMessage();
     }
-    // Vaciar el input después de enviar
-    inputText.value = "";
-
 });

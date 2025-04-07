@@ -7,15 +7,15 @@
     <script src="./assets/js/main.js" defer></script>
     <link
       rel="icon"
-      href="./assets/img/icon-traslate.png"
+      href="./assets/img/supermarket.png"
       type="image/png"
     />
-    <title>Chat de traducciones</title>
+    <title>Chat Street Market</title>
   </head>
   <body>
     <header class="chat__header">
-      <img src="./assets/img/icon-traslate.png" alt="Icono de traducción" class="header__icon">
-      <h1 class="header__title">Chat de traducciones</h1>
+      <img src="./assets/img/supermarket.png" alt="Icono de traducción" class="header__icon">
+      <h1 class="header__title">Chat de Street Market</h1>
     </header>
     
     <section class="chat">
@@ -26,17 +26,8 @@
       
       <!-- Controles de entrada (fuera de chat__messages) -->
       <div class="chat__input-group">
-        <input type="text" id="inputText" class="chat__input" placeholder="¿Qué quieres traducir ahora?.">
-        <div class="chat__inputs">
-          <select id="targetLang" class="chat__select">
-            <option value="es">Español</option>
-            <option value="en">Inglés</option>
-            <option value="fr">Francés</option>
-            <option value="de">Alemán</option>
-            <option value="it">Italiano</option>
-          </select>
-          <button class="chat__button" id="translateButton">Traducir</button>
-        </div>
+        <input type="text" id="inputText" class="chat__input" placeholder="¿En qué te puedo ayudar?">
+          <button class="chat__button" id="sendButton">Enviar</button>
       </div>
     </section>
   </body>

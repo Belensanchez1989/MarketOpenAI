@@ -3,8 +3,8 @@
 }
 
 body{
-  font-family: Arial, Helvetica, sans-serif;
-  background-color: #f4f4f9;
+  font-family: sans-serif, Arial,Helvetica;
+  background-color: #00b89d;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -24,19 +24,20 @@ body{
 .header__title{
   font-size: 3rem;
   font-weight: bold;
-  color: #007bff;
+  color: rgb(226, 223, 223);
   text-align: center;
   margin-bottom: 2rem;
 }
 
 .header__icon{
-    height: 4rem;
-    margin-top: 1.5rem;
+    height: 6rem;
+    width: 6rem;
+    
 }
 
 .chat{
-    width: 50rem;
-    background-color: white;
+    width: 60rem;
+  background-color: #89c5bc;
     border-radius: 1rem;
     box-shadow: 0 0.5rem 5px rgba(0, 0, 0, 0.1);
     padding: 2rem;
@@ -49,7 +50,7 @@ body{
     overflow-y: auto;
     padding: 1rem;
     border-radius: 0.8rem;
-    background-color: #fafafa;
+  background-color: #c2dad6;
     box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
@@ -65,7 +66,7 @@ body{
 
 }
 .chat__message--user{
-    background-color: #007bff;
+    background-color: #e0795d;
     color: white;
     text-align: right;
     margin-left: auto;
@@ -81,7 +82,7 @@ body{
 
 .chat__input-group {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     gap: 1rem;
     margin-top: 1rem;
 }
@@ -95,11 +96,12 @@ body{
     border-radius: 5px;
     padding: 1rem;
     transition: all 300ms ease-in-out;
+    flex:4;
 }
 
 .chat__input:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 5px #007bff;
+    border-color: #e6633f;
+    box-shadow: 0 0 5px #e6633f;
 }
 
 .chat__inputs {
@@ -108,19 +110,17 @@ body{
     gap: 1rem;
 }
 
-.chat__select,.chat__button {
+.chat__button {
     padding: 1rem;
     border-radius: 5px;
     border: 1px solid #ccc;
     font-size: 1.6rem;
-}
-.chat__select{
-    flex: 2;
+    flex:1;
 }
 
 .chat__button{
     flex: 1;
-    background-color: #007bff;
+    background-color: #e6633f;
     color: white;
     cursor:pointer;
     border: none;
@@ -128,5 +128,5 @@ body{
     transition: all 300ms ease;
 }
 .chat__button:hover {
-    background-color: #0056b3;
+    background-color: #aa492f;
 }

@@ -3,8 +3,6 @@ import express from 'express';
 import dotenv from 'dotenv';
 import OpenAI from 'openai';
 
-
-
 //cargar configuracion (de api key)
 dotenv.config();
 //cargar express
@@ -12,54 +10,80 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 //servir frontend
-app.use("/",express.static('public'));
+app.use("/", express.static('public'));
 
 //middelware para procesar json
 app.use(express.json());
-app.use(express.urlencoded({extended:true}));
-
+app.use(express.urlencoded({ extended: true }));
 
 //instancia de openai y pasar el api key
-
 const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY
 });
 
 //Ruta /endpoint/url 
-app.post("/api/traducir", async (req, res) => {
-    const { text, targetLang } = req.body;
-    
-    const promptSystem1 = "Eres un traductor profesional. Traduce el texto del usuario al idioma especificado, incluso si el texto parece estar ya en ese idioma.";
-    const promptSystem2 = "RESPONDE EXCLUSIVAMENTE CON LA TRADUCCIÓN DIRECTA. Está prohibido añadir comentarios, explicaciones, notas sobre idiomas, puntuación extra o saltos de línea. Si el texto no es traducible, devuelve el mismo texto sin modificar.";
 
-const promtUser = `IMPORTANTE: EL IDIOMA OBJETIVO ES ${targetLang.toUpperCase()}. 
-SI EL TEXTO PARECE INGLÉS PERO EL OBJETIVO ES "de", TRADÚCELO IGUAL. 
-Traduce rigorosamente este texto al ${targetLang} ("${text}"). 
-Identifica primero el idioma de origen y asegúrate de que la traducción sea exacta. 
-Ejemplo: Si el objetivo es "de" y el texto es "hello", devuelve "hallo". 
-Solo responde con la traducción. Está prohibido añadir comentarios o explicaciones.`;
+const contexto = ` Eres un asistente de soporte para el supermercado "Street Market".Información del negocio:
+    -Ubicación: Calle Numancia,número 77 , Barcelona
+    -Teléfono: 934 56 78 90888 
+    -Horario: Lunes a Sábado de 9:00 a 21:00
+    -Productos: Frutas, verduras, carne, pescado, panadería, lácteos y productos enlatados.
+    -Métodos de pago: Efectivo, tarjeta de crédito y débito y Bizum.
+    -Marcas: Ofrecemos productos de marcas reconocidas como Nestlé, Coca-Cola, Unilever,Pascual, Central Asturiana(Sólo y exclusivamente tenemos estos productos)
+    Sólo puedes responder preguntas relacionadas con el supermercado. No puedes responder preguntas sobre otros temas,está prohibido.No se realizan envíos a domicilio.
+    `;
+
+let conversations = {};
+
+app.post("/api/chatbot", async (req, res) => {
+
+
+    //Recibir pregunta del usuario
+    const { userId, message } = req.body;
+
+
+    if (!message) return res.status(400).json({ error: "Has enviado un mensaje vacío" });
+
+    if (!conversations [userId])  {
+        conversations [userId] = [];
+
+    }
+    conversations[userId].push({ role: "user", content: message });
+
+    //Peticion a la IA
     try {
-        const completion = await openai.chat.completions.create({
+        const response = await openai.chat.completions.create({
             model: "gpt-3.5-turbo",
-            messages: [
-                { role: "system", content: promptSystem1 },
-                { role: "system", content: promptSystem2 },
-                { role: "user", content: promtUser }
-            ],
-            max_tokens: 500,
-            temperature: 0 // Reduce la creatividad para respuestas más literales.
+            messages: [ 
+                { role: "system", content: contexto },
+                { role: "system", content: "Debes responder de la forma más corta y directa posible ,usando los mínimos tokens posibles" },
+                ...conversations[userId]],
+            max_tokens: 200,
         });
 
-        const translatedText = completion.choices[0].message.content;
-        return res.status(200).json({ translatedText });
+        //Devolver respuesta
+
+        const reply = response.choices[0].message.content;
+
+        //Añadir al asistente la respuesta
+        conversations[userId].push({ role: "assistant", content: reply });
+
+        //Limitar número de mensajes
+        if (conversations[userId].length > 12) {
+            conversations[userId] = conversations[userId].slice(-10);
+        }
+
+        console.log(conversations);
+
+        return res.status(200).json({ reply });
+
     } catch (error) {
         console.log(error);
-        return res.status(500).json({ error: "Error al traducir el texto" });
+        return res.status(500).json({ error: "Error al generar la respuesta" });
     }
 });
- //funcionalidad para introducir la IA
 
- //servir el backend
- app.listen(PORT, () => {
-    console.log("Servidor corriendo en http://localhost:"+ PORT);
-}) ;          
+//servir el backend
+app.listen(PORT, () => {
+    console.log("Servidor corriendo en http://localhost:" + PORT);
+});
