@@ -1,7 +1,7 @@
 # 🛒 Supermarket Chatbot - Street Market  
 
 **AI-powered customer support chatbot specialized for supermarkets**  
-
+<img width="1013" height="685" alt="Image" src="https://github.com/user-attachments/assets/0b889561-5e37-482e-8515-36f931c86d6a" />
 ## 🌟 Key Features  
 - 💬 Interactive chat with real-time responses  
 - 🧠 Conversation memory per user  
